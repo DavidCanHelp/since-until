@@ -15,6 +15,49 @@ cargo install since-until
 | `until`            | CLI, future-leaning — "in 6 months, 24 days" (gentle note if past)|
 | `since-until-mcp`  | MCP server (stdio) — `since`, `until`, `list_anchors` tools       |
 
+## zsh users: read this about `until`
+
+`until` is a **zsh reserved word** (the `until …; do …; done` loop). zsh recognizes
+it at parse time, *before* any PATH lookup, so a bare `until tomorrow` never reaches
+the installed binary — instead you drop into an `until>` continuation prompt (and with
+a non-command argument it can loop forever). `since` is unaffected. This is a shell
+naming collision, **not** a bug — `since-until` installs the binary correctly at
+`~/.cargo/bin/until`; the shell just intercepts the name first.
+
+Two ways to run it with **zero setup** — both quote/escape past the reserved word:
+
+```sh
+command until tomorrow
+\until tomorrow
+```
+
+For everyday use, add a short, safe wrapper to your `~/.zshrc` (`till` is a natural
+synonym and is *not* reserved):
+
+```sh
+# since-until: `until` is a zsh reserved word; `till` calls the real binary.
+till() { command until "$@"; }
+```
+
+Then `till tomorrow`, `till 2030-01-01`, `till covid` all work. The wrapper uses
+`command until` internally, so it can never recurse into the keyword. A ready-to-source
+version lives at [`contrib/until.zsh`](contrib/until.zsh):
+
+```sh
+source /path/to/since-until/contrib/until.zsh
+```
+
+> Note: aliasing the bare name (`alias until=…`) does **not** work — the reserved word
+> still wins, and a looping alias body can hang the shell. Use `command until`, `\until`,
+> or the `till` function. **bash** users are unaffected; `until` is reserved there too,
+> but a bare `until tomorrow` simply errors rather than shadowing — still, the same
+> wrappers work if you want them.
+>
+> Why not just rename the binary? Keeping `until` preserves the `since` / `until`
+> symmetry that's the whole point of the tool, and the binary itself is correct on every
+> platform and shell that doesn't reserve the word. The collision is purely lexical, so
+> the fix belongs in your shell config, not in the command's name.
+
 ## The engine
 
 A signed, calendar-honest difference between a target date and *now*, broken into

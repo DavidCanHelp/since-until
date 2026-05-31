@@ -1,6 +1,6 @@
 [package]
 name = "since-until"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["David Liedle <david.liedle@gmail.com>"]
 description = "One engine, several front doors: `since`/`until` CLIs and an MCP server for honest calendar-aware date differences, with user-defined named anchors."
