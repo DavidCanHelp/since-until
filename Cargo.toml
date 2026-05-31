@@ -1,0 +1,40 @@
+[package]
+name = "since-until"
+version = "0.1.0"
+edition = "2021"
+authors = ["David Liedle <david.liedle@gmail.com>"]
+description = "One engine, several front doors: `since`/`until` CLIs and an MCP server for honest calendar-aware date differences, with user-defined named anchors."
+license = "MIT"
+repository = "https://github.com/DavidCanHelp/since-until"
+homepage = "https://github.com/DavidCanHelp/since-until"
+readme = "README.md"
+keywords = ["mcp", "cli", "date", "time", "duration"]
+categories = ["command-line-utilities", "date-and-time"]
+
+[lib]
+name = "since_until"
+path = "src/lib.rs"
+
+[[bin]]
+name = "since"
+path = "src/bin/since.rs"
+
+[[bin]]
+name = "until"
+path = "src/bin/until.rs"
+
+[[bin]]
+name = "since-until-mcp"
+path = "src/bin/since-until-mcp.rs"
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+directories = "5"
+
+# MCP server face (the CLI binaries don't touch these).
+rmcp = { version = "1.5", features = ["server", "macros", "transport-io"] }
+schemars = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "io-std"] }
+anyhow = "1"
